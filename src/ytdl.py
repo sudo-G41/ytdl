@@ -5,14 +5,10 @@ import time
 
 def download_audio_only(URL):
     now_time = str(int(time.time()*1000000))
-        
     def format_selector(ctx):
         formats = ctx.get('formats')[::-1]
-        best_audio = None
         best_audio = next(f for f in formats
                         if f['vcodec'] == 'none' and f['acodec'] != 'none')
-        
-        print(f"{best_audio['acodec']}")
         
         yield {
             'format_id': f'{best_audio["format_id"]}',
