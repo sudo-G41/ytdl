@@ -22,7 +22,7 @@ def video():
 	print(f"video page")
 	return render_template("video.html")
 
-@app.route("/audio_only")
+@app.route("/audio_only", methods=["GET","POST"])
 def audio_only():
     print("audio file page")
     return render_template("audio_only.html")
@@ -55,6 +55,7 @@ def server_local_download():
 	file_names = glob(f"download/{hash}{time_hash}.*")
 	file_path = f"{file_names[0]}"
 	ext = "mp4" if  file_path[-1] == "4" else "webm"
+	mimetype = "video"
 
 	print(f"file name list : {file_names}")
 	print(f"file path : {file_path}...{file_path[-1]}")
@@ -65,6 +66,7 @@ def server_local_download():
 		file_names = file_names,
 		file_path = file_path,
 		ext = ext,
+        mimetype = mimetype
 	)
 
 """
@@ -77,11 +79,15 @@ def server_local_download_audio_only():
     ytdl.ytdl_test()
     hash = request.form["hash"]
     url = "https://youtu.be/"+hash
-    time_hash = ytdl.download_audio_only(url)
-    file_names = glob(f"download/{hash}{time_hash}.*")
+    print("=======================")
+    print("=   audio downloads   =")
+    print("=======================")
+    time_hash = ytdl.download_audio_only(url,hash)
+    file_names = glob(f"download/*{hash}{time_hash}.*")
     file_path = f"{file_names[0]}"
     # ext = "m4a" if  file_path[-1] == "a" else "webm"
     ext = file_path.strip().split(".")[-1]
+    mimetype = "audio"
 
     print(f"file name list : {file_names}")
     print(f"file path : {file_path}...{file_path[-1]}")
@@ -92,6 +98,7 @@ def server_local_download_audio_only():
         file_names = file_names,
         file_path = file_path,
         ext = ext,
+        mimetype = mimetype
     ) 
 
 """
@@ -104,6 +111,12 @@ def send_files():
 	file_path = request.form["path"]
 	hash = request.form["hash_code"]
 	ext = request.form["ext"]
+	mimetype = request.form["mimetype"]+"/"
+	if(mimetype=="video"):
+		mimetype += ext
+	else:
+		mimetype += "*"
+		ext = "mp3"
 
 	@after_this_request
 	def remove_file(response):
@@ -119,7 +132,7 @@ def send_files():
 	print("download yes")
 	return send_file(
 		file_path,
-		mimetype=f"video/{ext}",
+		mimetype=f"{mimetype}/{ext}",
 		download_name=f"{hash}.{ext}",
 		as_attachment=True
 	)

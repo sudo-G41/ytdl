@@ -21,6 +21,7 @@
         <input type="hidden" id="download_file_names" name="names">
         <input type="hidden" id="download_file_path" name="path">
         <input type="hidden" id="download_ext" name="ext">
+        <input type="hidden" id="download_mimetype" name="mimetype">
     </form>
 
     <script>
@@ -30,43 +31,59 @@
             const nextUrl = $("#downloadNextUrl").val();
             console.log("hash code: "+hash);
             console.log("next: "+nextUrl);
+            
+            // $.post(nextUrl, {"hash":hash}, function(response) {
+            //         console.log("send file");
+            //         console.log(response);
+            //         waitTime(100)
+            //             .then(()=>setdata(response))
+            //             .then(()=>waitTime(500))
+            //             .then(()=>check())
+            //             .then(()=>waitTime(700));
+            //     }
+            // );
+            
             $.ajax({
-            url: nextUrl,
-            type: 'POST',
-            data:{
-                "hash":hash
-            },
-            success: function(response) {
-                console.log("send file");
-                console.log(response);
-                waitTime(100)
-                    .then(()=>setdata(response))
-                    .then(()=>waitTime(500))
-                    .then(()=>check())
-                    .then(()=>waitTime(700));
-            },
-            error: function(error) {
-                console.log(error);
-                alert("오류가 발생하였습니다.\nURL과 섬네일을 다시 확인해 주시고\n잠시 후 다시 실행하여 주세요.");
-                window.history.back();
-            }
-        })}, 1000);
+                url: nextUrl,
+                type: 'POST',
+                data:{
+                    "hash":hash
+                },
+                async:false,
+                success: function(response) {
+                    console.log("send file");
+                    console.log(response);
+                    waitTime(100)
+                        .then(()=>setdata(response))
+                        .then(()=>waitTime(500))
+                        .then(()=>check())
+                        .then(()=>waitTime(700));
+                },
+                error: function(error) {
+                    console.log(error);
+                    alert("오류가 발생하였습니다.\nURL과 섬네일을 다시 확인해 주시고\n잠시 후 다시 실행하여 주세요.");
+                    window.history.back();
+                }
+            })
+        }, 1000);
 
         function waitTime(waitMs) {
             return new Promise((resolve) => setTimeout(resolve, waitMs));
         }
         function setdata(fileData) {
-            $("#download_time_hash").val(fileData["time_hash"])
-            $("#download_file_names").val(fileData["file_names"])
-            $("#download_file_path").val(fileData["file_path"])
-            $("#download_ext").val(fileData["ext"])
+            $("#download_time_hash").val(fileData["time_hash"]);
+            $("#download_file_names").val(fileData["file_names"]);
+            $("#download_file_path").val(fileData["file_path"]);
+            $("#download_ext").val(fileData["ext"]);
+            $("#download_mimetype").val(fileData["mimetype"]);
         }
         function check(){
             if(confirm("다운받으시겠습니까?")){
                 console.log("Yes");
                 waitTime(100)
                     .then(()=>{$("#download_form").submit();})
-                    .then(()=>waitTime(700))
+                	.then(()=>alert("확인 후 5초 뒤 메인화면으로 돌아갑니다."))
+                    .then(()=>waitTime(5000))
                     .then(()=>location.replace("/"));
             }
             else{

@@ -1,30 +1,13 @@
 import yt_dlp
 import time
+import subprocess
 
 # URLS = ["https://youtu.be/CupFQnoO_28"]
 
-def download_audio_only(URL):
+def download_audio_only(URL, hash):
     now_time = str(int(time.time()*1000000))
-    def format_selector(ctx):
-        formats = ctx.get('formats')[::-1]
-        best_audio = next(f for f in formats
-                        if f['vcodec'] == 'none' and f['acodec'] != 'none')
-        
-        yield {
-            'format_id': f'{best_audio["format_id"]}',
-            'ext': best_audio['ext'],
-            'requested_formats': [best_audio],
-            'protocol': f'{best_audio["protocol"]}'
-        }
-
-    ydl_opts = {
-        'format': format_selector,
-        'outtmpl': u'download/%(id)s'+now_time+u'.%(ext)s',
-    }
-
-    with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-        ydl.download(URL)
-        
+    qwer = subprocess.run(["yt-dlp", "-f", "ba", "-o", f"download/%(title)s{hash}{now_time}.%(ext)s", URL], stdout=subprocess.PIPE, text=True)
+    print(qwer.stdout)
     return now_time
 
 def download_video(URL):
@@ -39,6 +22,7 @@ def download_video(URL):
         # acodec='none' means there is no audio
         best_video = next(f for f in formats
                         if f['vcodec'] != 'none' and f['acodec'] != 'none')
+        print(best_video)
         
         # These are the minimum required fields for a merged format
         yield {
