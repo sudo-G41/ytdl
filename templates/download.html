@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="kr">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>loading...</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+</head>
+<body>
+    <h2>now downloading...</h2>
+    <h2>
+        잠시 기다려주시면 다운로드가 시작됩니다.<br>
+        아래 썸네일을 보시면서 원하시던 영상이 맞는지 확인하여 주세요.
+    </h2>
+    <form action="/sf" method="post" name="from" id="download_form">
+        <img class="mb-4" id="thumbnail" src="https://img.youtube.com/vi/{{hash}}/hqdefault.jpg" alt="" width="50%">
+        <input type="hidden" value="{{hash}}" id="download_hash_code" name="hash_code">
+        <input type="hidden" value="{{nextUrl}}" id="downloadNextUrl">
+        <input type="hidden" id="download_time_hash" name="tiem_code">
+        <input type="hidden" id="download_file_names" name="names">
+        <input type="hidden" id="download_file_path" name="path">
+        <input type="hidden" id="download_ext" name="ext">
+    </form>
+
+    <script>
+        setTimeout(function(){
+            console.log("post sd");
+            const hash = $("#download_hash_code").val();
+            const nextUrl = $("#downloadNextUrl").val();
+            console.log("hash code: "+hash);
+            console.log("next: "+nextUrl);
+            $.ajax({
+            url: nextUrl,
+            type: 'POST',
+            data:{
+                "hash":hash
+            },
+            success: function(response) {
+                console.log("send file");
+                console.log(response);
+                waitTime(100)
+                    .then(()=>setdata(response))
+                    .then(()=>waitTime(500))
+                    .then(()=>check())
+                    .then(()=>waitTime(700));
+            },
+            error: function(error) {
+                console.log(error);
+                alert("오류가 발생하였습니다.\nURL과 섬네일을 다시 확인해 주시고\n잠시 후 다시 실행하여 주세요.");
+                window.history.back();
+            }
+        })}, 1000);
+
+        function waitTime(waitMs) {
+            return new Promise((resolve) => setTimeout(resolve, waitMs));
+        }
+        function setdata(fileData) {
+            $("#download_time_hash").val(fileData["time_hash"])
+            $("#download_file_names").val(fileData["file_names"])
+            $("#download_file_path").val(fileData["file_path"])
+            $("#download_ext").val(fileData["ext"])
+        }
+        function check(){
+            if(confirm("다운받으시겠습니까?")){
+                console.log("Yes");
+                waitTime(100)
+                    .then(()=>{$("#download_form").submit();})
+                    .then(()=>waitTime(700))
+                    .then(()=>location.replace("/"));
+            }
+            else{
+                waitTime(100)
+                    .then(()=>{
+                        const f = $("#download_form");
+                        f.attr("action", "/rm");
+                    })
+                    .then(()=>{$("#download_form").submit();});
+            }
+        }
+    </script>
+</body>
+</html>

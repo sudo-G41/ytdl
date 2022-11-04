@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="kr">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+    <title>Youtube Downloader</title>
+</head>
+<body>
+	<h1>Hi</h1>
+	<h2>지금은 테스트중 UI는 언젠가 꾸밀...려나?</h2>
+	<form action="/downloading" method="post" name="URLForm" accept-charset="utf-8" onsubmit="return isYoutube()">
+		<fieldset style="width: 325px;">
+			<legend>주소입력</legend>
+				Youtube 링크 <input type="url" required autofocus pattern="(http|https):\/\/(youtu.be\/|www.youtube.com\/watch\?v=)[\w-]+" title="Youtube URL을 입력해 주세요" id="YoutubeUrlInput" placeholder="Youtube URL" name="YoutubeURL" onchange="isYoutube()">
+			<input type="submit" name="downBnt" value="download">
+		</fieldset>
+		<img class="mb-4" id="thumbnail" alt="" width="50%">
+		<input type="hidden" name="hash" id="main_hash_code">
+        <input type="hidden" name="nextUrl" value="/sld">
+	</form>
+</body>
+<script>
+	function isYoutube() {
+		let f = document.URLForm;
+		let url = f.YoutubeURL.value
+		const urlPattern = /(http|https):\/\/(youtu.be\/|www.youtube.com\/watch\?v=)/;
+		var isa = url.replace(urlPattern,"");
+		if(isa!=null){
+			let thUrl = "https://img.youtube.com/vi/";
+			let imgSize = "/hqdefault.jpg";
+			document.querySelector("#thumbnail").src = thUrl+isa+imgSize;
+			document.querySelector("#thumbnail")
+			$("#main_hash_code").val(isa)
+			return true;
+		}
+		else{
+			return false;
+		}
+	}
+</script>
+</html>
