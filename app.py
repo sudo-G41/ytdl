@@ -112,7 +112,7 @@ def send_files():
 	hash = request.form["hash_code"]
 	ext = request.form["ext"]
 	mimetype = request.form["mimetype"]+"/"
-	if(mimetype=="video"):
+	if(mimetype=="video/"):
 		mimetype += ext
 	else:
 		mimetype += "*"
