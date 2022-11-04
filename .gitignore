@@ -2,7 +2,6 @@
 *.sh
 
 ### dir ###
-__pycache__/
 
 ### test code ###
 qwer.py
@@ -12,5 +11,7 @@ asdf
 ### log ###
 log/
 
-### VS Code ###
+### setting ###
 .vscode/
+.gitpod.yml
+__pycache__/
