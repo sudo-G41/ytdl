@@ -1,6 +1,9 @@
 ### shell ###
 *.sh
 
+### dir ###
+__pycache__/
+
 ### test code ###
 qwer.py
 testcat
