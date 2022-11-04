@@ -37,7 +37,8 @@ def downloading():
 	hash = request.form["hash"]
 	nextUrl = request.form["nextUrl"]
 	print(f"downloading page")
-	print(f"hash is {hash}")
+	print(f"hash: {hash}")
+	print(f"next URL: {nextUrl}")
 	return render_template("download.html", hash=hash, nextUrl=nextUrl)
 
 """
