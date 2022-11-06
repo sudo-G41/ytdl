@@ -3,6 +3,7 @@ from flask import Flask, redirect, request, render_template, jsonify, send_file,
 from src import ytdl
 from glob import glob
 from sys import stdin, argv
+from time import strftime, localtime
 
 import os
 
@@ -39,6 +40,12 @@ def downloading():
 	print(f"downloading page")
 	print(f"hash: {hash}")
 	print(f"next URL: {nextUrl}")
+    
+	now_date = strftime('%Y. %m. %d. %H:%M:%S(%a) KST')
+    
+	with open("log/download_list.csv",'a') as f:
+		f.write(f"{now_date}, {hash}\n")
+    
 	return render_template("download.html", hash=hash, nextUrl=nextUrl)
 
 """

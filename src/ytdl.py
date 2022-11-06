@@ -7,7 +7,6 @@ import subprocess
 def download_audio_only(URL, hash):
     now_time = str(int(time.time()*1000000))
     qwer = subprocess.run(["yt-dlp", "-f", "ba", "-o", f"download/%(title)s{hash}{now_time}.%(ext)s", URL], stdout=subprocess.PIPE, text=True)
-    print(qwer.stdout)
     return now_time
 
 def download_video(URL):
@@ -22,7 +21,6 @@ def download_video(URL):
         # acodec='none' means there is no audio
         best_video = next(f for f in formats
                         if f['vcodec'] != 'none' and f['acodec'] != 'none')
-        print(best_video)
         
         # These are the minimum required fields for a merged format
         yield {
@@ -44,4 +42,4 @@ def download_video(URL):
     return now_time
 
 def ytdl_test():
-    print("test success")
+    print("yt test success")
