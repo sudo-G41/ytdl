@@ -8,9 +8,10 @@ qwer.py
 testcat
 
 ### log ###
-log/
+log/download_list.csv
 
 ### setting ###
 .vscode/
 .gitpod.yml
 __pycache__/
+.venv/

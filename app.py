@@ -1,9 +1,11 @@
 # URL: https://sctube.run.goorm.io/
-from flask import Flask, redirect, request, render_template, jsonify, send_file, after_this_request
+from flask import Flask, redirect, request, render_template, jsonify, send_file, after_this_request, abort
 from src import ytdl
 from glob import glob
 from sys import stdin, argv
 from time import strftime, localtime
+
+import src
 
 import os
 
@@ -36,17 +38,20 @@ server local download and send file page
 @app.route("/downloading", methods=["post"])
 def downloading():
 	hash = request.form["hash"]
-	nextUrl = request.form["nextUrl"]
-	print(f"downloading page")
-	print(f"hash: {hash}")
-	print(f"next URL: {nextUrl}")
-    
-	now_date = strftime('%Y. %m. %d. %H:%M:%S(%a) KST')
-    
-	with open("log/download_list.csv",'a') as f:
-		f.write(f"{now_date}, {hash}\n")
-    
-	return render_template("download.html", hash=hash, nextUrl=nextUrl)
+	if 10<len(hash)<15 and src.is_valid_string(hash):
+		nextUrl = request.form["nextUrl"]
+		print(f"downloading page")
+		print(f"hash: {hash}")
+		print(f"next URL: {nextUrl}")
+		
+		now_date = strftime('%Y. %m. %d. %H:%M:%S(%a) KST')
+		
+		with open("log/download_list.csv",'a') as f:
+			f.write(f"{now_date}, {hash}\n")
+		
+		return render_template("download.html", hash=hash, nextUrl=nextUrl)
+	else:
+		abort(404)
 
 """
 sld = server local download

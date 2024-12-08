@@ -14,7 +14,15 @@
 	<form action="/downloading" method="post" name="URLForm" accept-charset="utf-8" onsubmit="return isYoutube()">
 		<fieldset style="width: 325px;">
 			<legend>주소입력</legend>
-				Youtube 링크 <input type="url" required autofocus pattern="(http|https):\/\/(youtu.be\/|www.youtube.com\/watch\?v=)[\w-]+" title="Youtube URL을 입력해 주세요" id="YoutubeUrlInput" placeholder="Youtube URL" name="YoutubeURL" onchange="isYoutube()">
+				Youtube 링크 
+				<input type="url" required autofocus 
+					pattern="^((?:https?:)?\/\/)?((?:www|m)\.)?((?:youtube(-nocookie)?\.com|youtu.be))(\/(?:[\w\-]+\?v=|embed\/|live\/|v\/|shorts\/)?)([\w\-]+)(\S+)?$" 
+					title="Youtube URL을 입력해 주세요" 
+					id="YoutubeUrlInput" 
+					placeholder="Youtube URL" 
+					name="YoutubeURL" 
+					onchange="isYoutube()"
+				>
 			<input type="submit" name="downBnt" value="download">
 		</fieldset>
 		<img class="mb-4" id="thumbnail" alt="" width="50%">
@@ -25,20 +33,24 @@
 <script>
 	function isYoutube() {
 		let f = document.URLForm;
-		let url = f.YoutubeURL.value
-		const urlPattern = /(http|https):\/\/(youtu.be\/|www.youtube.com\/watch\?v=)/;
-		var isa = url.replace(urlPattern,"");
-		if(isa!=null){
-			let thUrl = "https://img.youtube.com/vi/";
-			let imgSize = "/hqdefault.jpg";
-			document.querySelector("#thumbnail").src = thUrl+isa+imgSize;
-			document.querySelector("#thumbnail")
-			$("#main_hash_code").val(isa)
-			return true;
+		let url = f.YoutubeURL.value;
+		const urlPattern = /^((?:https?:)?\/\/)?((?:www|m)\.)?((?:youtube(-nocookie)?\.com|youtu.be))(\/(?:[\w\-]+\?v=|embed\/|live\/|v\/|shorts\/)?)([\w\-]+)(\S+)?$/;
+		
+		if (urlPattern.test(url)) {
+			let videoId = url.match(urlPattern)[6];
+			if (videoId) {
+				let thUrl = "https://img.youtube.com/vi/";
+				let imgSize = "/hqdefault.jpg";
+				document.querySelector("#thumbnail").src = thUrl + videoId + imgSize;
+				$("#main_hash_code").val(videoId);
+				return true;
+			}
 		}
-		else{
-			return false;
-		}
+		
+		// URL이 유효하지 않은 경우
+		document.querySelector("#thumbnail").src = "";
+		$("#main_hash_code").val("");
+		return false;
 	}
 </script>
 </html>
