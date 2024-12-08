@@ -1,0 +1,47 @@
+# Git 관련
+.git
+.gitignore
+
+# Python 관련
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+pip-log.txt
+pip-delete-this-directory.txt
+.tox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.log
+
+# 개발 환경 관련
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# 운영체제 관련
+.DS_Store
+Thumbs.db
+
+# 프로젝트 특정 파일
+*.md
+LICENSE
+README.md
+
+# 테스트 및 문서
+tests/
+docs/
+download/
+
+# 기타 불필요한 파일
+*.tmp
+*.bak
+*.log

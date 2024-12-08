@@ -5,7 +5,7 @@ from glob import glob
 from sys import stdin, argv
 from time import strftime, localtime
 
-import src
+# import src
 
 import os
 
@@ -38,7 +38,7 @@ server local download and send file page
 @app.route("/downloading", methods=["post"])
 def downloading():
 	hash = request.form["hash"]
-	if 10<len(hash)<15 and src.is_valid_string(hash):
+	if 10<len(hash)<15 and is_valid_string(hash):
 		nextUrl = request.form["nextUrl"]
 		print(f"downloading page")
 		print(f"hash: {hash}")
@@ -181,5 +181,9 @@ def port_input():
         print("input num plz")
         exit()
     return port_num
+
+def is_valid_string(s):
+    allowed_chars = set('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_-')
+    return set(s).issubset(allowed_chars)
 
 app.run(debug=yes_or_no(), host="0.0.0.0", port=port_input())
