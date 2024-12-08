@@ -2,6 +2,7 @@
 *.sh
 
 ### dir ###
+download/
 
 ### test code ###
 qwer.py
